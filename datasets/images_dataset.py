@@ -45,7 +45,7 @@ class BabapourImageDataset(Dataset):
 		self.opts = opts
 
 	def __len__(self):
-		return len(self.source_paths)
+		return len(self.paths)
 
 	def __getitem__(self, index):
 		from_path = self.paths[index][0]
