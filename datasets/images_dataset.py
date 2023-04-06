@@ -31,3 +31,35 @@ class ImagesDataset(Dataset):
 			from_im = to_im
 
 		return from_im, to_im
+
+
+class BabapourImageDataset(Dataset):
+
+	def __init__(self, root, opts, is_train,target_transform=None, source_transform=None):
+		if is_train:
+			self.paths = data_utils.make_babapour_dataset(root,5,5)[:18000]
+		else:
+			self.paths = data_utils.make_babapour_dataset(root,5,5)[18000:]
+		self.source_transform = source_transform
+		self.target_transform = target_transform
+		self.opts = opts
+
+	def __len__(self):
+		return len(self.source_paths)
+
+	def __getitem__(self, index):
+		from_path = self.paths[index][0]
+		from_im = Image.open(from_path)
+		from_im = from_im.convert('RGB') if self.opts.label_nc == 0 else from_im.convert('L')
+
+		to_path = self.paths[index][0]
+		to_im = Image.open(to_path).convert('RGB')
+		if self.target_transform:
+			to_im = self.target_transform(to_im)
+
+		if self.source_transform:
+			from_im = self.source_transform(from_im)
+		else:
+			from_im = to_im
+
+		return from_im, to_im
