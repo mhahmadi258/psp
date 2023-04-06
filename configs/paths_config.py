@@ -6,7 +6,7 @@ dataset_paths = {
 	'celeba_train_segmentation': '',
 	'celeba_test_segmentation': '',
 	'ffhq': 'datasets/ffhq/resized',
-	'babapour':'babapour_dataset',
+	'babapour':'datasets/babapour_dataset',
 }
 
 model_paths = {
