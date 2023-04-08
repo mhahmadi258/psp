@@ -49,7 +49,7 @@ class BabapourImageDataset(Dataset):
 
 	def __getitem__(self, index):
 		from_path = self.paths[index][0]
-		from_im = [Image.open(path) for path in from_path]
+		from_im = [Image.open(path) for path in from_path[:5]]
 		from_im = [img.convert('RGB') for img in from_im]
 
 		to_path = self.paths[index][1]
