@@ -2,6 +2,7 @@ from abc import abstractmethod
 import torchvision.transforms as transforms
 from datasets import augmentations
 
+import torch
 
 class TransformsConfig(object):
 
@@ -51,10 +52,10 @@ class FrontalizationTransforms(TransformsConfig):
 				transforms.ToTensor(),
 				transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])]),
 			'transform_source': transforms.Compose([
-				transforms.Resize((256, 256)),
-				transforms.RandomHorizontalFlip(0.5),
-				transforms.ToTensor(),
-				transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])]),
+				transforms.Lambda(lambda imgs: [transforms.Resize((256, 256))(img) for img in imgs]),
+				transforms.Lambda(lambda imgs: [transforms.ToTensor()(img) for img in imgs]),
+				transforms.Lambda(lambda imgs: [transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])(img) for img in imgs]),
+				transforms.Lambda(lambda imgs: torch.stask(imgs))]),
 			'transform_test': transforms.Compose([
 				transforms.Resize((256, 256)),
 				transforms.ToTensor(),

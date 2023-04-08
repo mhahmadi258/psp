@@ -26,15 +26,18 @@ class BackboneEncoderFirstStage(Module):
         self.output_layer_3 = Sequential(BatchNorm2d(256),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten(),
-                                         Linear(256 * 7 * 7, 512 * 9))
+                                         torch.nn.LSTM(256 * 7 * 7, 512),
+                                         Linear(512, 512 * 9))
         self.output_layer_4 = Sequential(BatchNorm2d(128),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten(),
-                                         Linear(128 * 7 * 7, 512 * 5))
+                                         torch.nn.LSTM(128 * 7 * 7, 512),
+                                         Linear(512, 512 * 5))
         self.output_layer_5 = Sequential(BatchNorm2d(64),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten(),
-                                         Linear(64 * 7 * 7, 512 * 4))
+                                         torch.nn.LSTM(64 * 7 * 7, 512),
+                                         Linear(512, 512 * 4))
         modules = []
         for block in blocks:
             for bottleneck in block:

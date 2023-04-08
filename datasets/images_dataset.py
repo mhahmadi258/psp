@@ -37,9 +37,9 @@ class BabapourImageDataset(Dataset):
 
 	def __init__(self, root, opts, is_train,target_transform=None, source_transform=None):
 		if is_train:
-			self.paths = data_utils.make_babapour_dataset(root,5,5)[:18000]
+			self.paths = data_utils.make_babapour_dataset(root,5,5)[:16000]
 		else:
-			self.paths = data_utils.make_babapour_dataset(root,5,5)[18000:]
+			self.paths = data_utils.make_babapour_dataset(root,5,5)[16000:]
 		self.source_transform = source_transform
 		self.target_transform = target_transform
 		self.opts = opts
@@ -49,7 +49,7 @@ class BabapourImageDataset(Dataset):
 
 	def __getitem__(self, index):
 		from_path = self.paths[index][0]
-		from_im = Image.open(from_path)
+		from_im = [Image.open(path) for path in from_path]
 		from_im = from_im.convert('RGB') if self.opts.label_nc == 0 else from_im.convert('L')
 
 		to_path = self.paths[index][1]

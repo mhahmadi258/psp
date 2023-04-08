@@ -25,7 +25,7 @@ def make_dataset(dir):
                 images.append(path)
     return images
 
-def make_babapour_dataset(dir, random_seq=None, random_frame=None):
+def make_babapour_dataset(dir):
     paths = list()
     for video in os.listdir(dir):
         video_path = os.path.join(dir, video)
@@ -33,17 +33,11 @@ def make_babapour_dataset(dir, random_seq=None, random_frame=None):
             person_path = os.path.join(video_path,person)
             target_dir = os.path.join(person_path,'best_faces')
             target = os.path.join(target_dir,os.listdir(target_dir)[0])
-            if random_seq:
-                selected_seqs = os.listdir(person_path)[::random_seq]
-            else:
-                selected_seqs = os.listdir(person_path)
-            for seq in selected_seqs:
+            for seq in os.listdir(person_path):
                 if seq != 'best_faces':
                     seq_path = os.path.join(person_path,seq)
-                    if random:
-                        selected_frames = random.sample(os.listdir(seq_path),random_frame)
-                    else:
-                        selected_frames = os.listdir(seq_path)
-                    for frame in selected_frames:
-                        paths.append((os.path.join(seq_path,frame), target))
+                    frames = list()
+                    for frame in os.listdir(seq_path):
+                        frames.append(os.path.join(seq_path,frame))
+                    paths.append((frames, target))
     return paths
