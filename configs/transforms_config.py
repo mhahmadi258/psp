@@ -55,7 +55,7 @@ class FrontalizationTransforms(TransformsConfig):
 				transforms.Lambda(lambda imgs: [transforms.Resize((256, 256))(img) for img in imgs]),
 				transforms.Lambda(lambda imgs: [transforms.ToTensor()(img) for img in imgs]),
 				transforms.Lambda(lambda imgs: [transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])(img) for img in imgs]),
-				transforms.Lambda(lambda imgs: torch.stask(imgs))]),
+				transforms.Lambda(lambda imgs: torch.stack(imgs))]),
 			'transform_test': transforms.Compose([
 				transforms.Resize((256, 256)),
 				transforms.ToTensor(),
