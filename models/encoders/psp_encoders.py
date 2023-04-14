@@ -80,9 +80,9 @@ class BackboneEncoderFirstStage(Module):
         
         print(lc_part_4.shape)
         
-        lc_part_4 = self.output_layer_5(lc_part_4)
-        lc_part_3 = self.output_layer_4(lc_part_3)
-        lc_part_2 = self.output_layer_3(lc_part_2)
+        lc_part_4 = self.output_seq_5(lc_part_4)
+        lc_part_3 = self.output_seq_4(lc_part_3)
+        lc_part_2 = self.output_seq_3(lc_part_2)
         
         print(lc_part_4.shape)
         raise Exception
