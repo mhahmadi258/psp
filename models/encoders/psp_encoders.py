@@ -70,7 +70,9 @@ class BackboneEncoderFirstStage(Module):
             lc_part_3.append(self.output_layer_4(x_frame))
             for l in self.modulelist[7:21]:
                 x_frame = l(x_frame)
+            print('noooooooooooo1111111111111111')
             lc_part_2.append(self.output_layer_3(x_frame))
+        print('noooooooooooooooooooooooooooooooooooo')
                 
         lc_part_4 = torch.stack(lc_part_4)
         lc_part_3 = torch.stack(lc_part_3)
