@@ -74,10 +74,11 @@ class BackboneEncoderFirstStage(Module):
             lc_part_2.append(self.output_layer_3(x_frame))
             
             
-        print(lc_part_4.shape)    
         lc_part_4 = torch.stack(lc_part_4)
         lc_part_3 = torch.stack(lc_part_3)
         lc_part_2 = torch.stack(lc_part_2)
+        
+        print(lc_part_4.shape)
         
         lc_part_4 = self.output_layer_5(lc_part_4)
         lc_part_3 = self.output_layer_4(lc_part_3)
