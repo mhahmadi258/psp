@@ -58,7 +58,6 @@ class BackboneEncoderFirstStage(Module):
         lc_part_3 = list()
         lc_part_2 = list()
         for i in range(x.shape[1]):
-            print(f'start {i}')
             x_frame = x[:,i,:,:,:]
             x_frame = self.input_layer(x_frame)
             
@@ -72,11 +71,10 @@ class BackboneEncoderFirstStage(Module):
             
             for l in self.modulelist[7:21]:
                 x_frame = l(x_frame)
-            print('noooooooooooo1111111111111111')
             lc_part_2.append(self.output_layer_3(x_frame))
-            print(f'end{i}--------------------------------------------------')
-        print('noooooooooooooooooooooooooooooooooooo')
-                
+            
+            
+        print(lc_part_4.shape)    
         lc_part_4 = torch.stack(lc_part_4)
         lc_part_3 = torch.stack(lc_part_3)
         lc_part_2 = torch.stack(lc_part_2)
