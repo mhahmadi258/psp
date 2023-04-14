@@ -60,6 +60,7 @@ class BackboneEncoderFirstStage(Module):
         lc_part_2 = list()
         for i in range(x.shape[1]):
             x_frame = x[:,i,:,:,:]
+            print(x_frame.shape)
             x_frame = self.input_layer(x_frame)
             for l in self.modulelist[:3]:
                 x_frame = l(x_frame)
