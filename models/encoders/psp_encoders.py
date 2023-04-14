@@ -25,19 +25,25 @@ class BackboneEncoderFirstStage(Module):
 
         self.output_layer_3 = Sequential(BatchNorm2d(256),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
-                                         Flatten(),
-                                         torch.nn.LSTM(256 * 7 * 7, 512),
-                                         Linear(512, 512 * 9))
+                                         Flatten())
+        
+        self.output_seq_3 = Sequential(torch.nn.LSTM(256 * 7 * 7, 512),
+                                       Linear(512, 512 * 9))
+        
         self.output_layer_4 = Sequential(BatchNorm2d(128),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
-                                         Flatten(),
-                                         torch.nn.LSTM(128 * 7 * 7, 512),
-                                         Linear(512, 512 * 5))
+                                         Flatten())
+        
+        self.output_seq_4 = Sequential(torch.nn.LSTM(128 * 7 * 7, 512),
+                                       Linear(512, 512 * 5))
+        
         self.output_layer_5 = Sequential(BatchNorm2d(64),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
-                                         Flatten(),
-                                         torch.nn.LSTM(64 * 7 * 7, 512),
-                                         Linear(512, 512 * 4))
+                                         Flatten())
+        
+        self.output_seq_5 = Sequential(torch.nn.LSTM(64 * 7 * 7, 512),
+                                       Linear(512, 512 * 4))
+        
         modules = []
         for block in blocks:
             for bottleneck in block:
@@ -48,6 +54,35 @@ class BackboneEncoderFirstStage(Module):
         self.modulelist = list(self.body)
 
     def forward(self, x):
+        print('yesssssssssssssssssssssssssssssssssssssssssss')
+        lc_part_4 = list()
+        lc_part_3 = list()
+        lc_part_2 = list()
+        for i in range(x.shape[1]):
+            x_frame = x[:,i,:,:,:]
+            x_frame = self.input_layer(x_frame)
+            for l in self.modulelist[:3]:
+                x_frame = l(x_frame)
+            lc_part_4.append(self.output_layer_5(x_frame))
+            for l in self.modulelist[3:7]:
+                x_frame = l(x_frame)
+            lc_part_3.append(self.output_layer_4(x_frame))
+            for l in self.modulelist[7:21]:
+                lc_part_2.append(self.output_layer_3(x_frame))
+                
+        lc_part_4 = torch.stack(lc_part_4)
+        lc_part_3 = torch.stack(lc_part_3)
+        lc_part_2 = torch.stack(lc_part_2)
+        
+        lc_part_4 = self.output_layer_5(lc_part_4)
+        lc_part_3 = self.output_layer_4(lc_part_3)
+        lc_part_2 = self.output_layer_3(lc_part_2)
+        
+        print(lc_part_4.shape)
+        raise Exception
+            
+            
+            
         x = self.input_layer(x)
         for l in self.modulelist[:3]:
           x = l(x)
