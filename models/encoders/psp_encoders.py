@@ -27,22 +27,24 @@ class BackboneEncoderFirstStage(Module):
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten())
         
-        self.output_seq_3 = Sequential(torch.nn.LSTM(256 * 7 * 7, 512),
-                                       Linear(512, 512 * 9))
+        self.output_seq_3 = torch.nn.LSTM(256 * 7 * 7, 512)
+        self.output_lin_3 = Linear(512, 512 * 9)
+        
         
         self.output_layer_4 = Sequential(BatchNorm2d(128),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten())
         
-        self.output_seq_4 = Sequential(torch.nn.LSTM(128 * 7 * 7, 512),
-                                       Linear(512, 512 * 5))
+        self.output_seq_4 = torch.nn.LSTM(128 * 7 * 7, 512)
+        self.output_lin_4 = Linear(512, 512 * 9)
+        
         
         self.output_layer_5 = Sequential(BatchNorm2d(64),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten())
         
-        self.output_seq_5 = Sequential(torch.nn.LSTM(64 * 7 * 7, 512),
-                                       Linear(512, 512 * 4))
+        self.output_seq_5 = torch.nn.LSTM(64 * 7 * 7, 512)
+        self.output_lin_5 = Linear(512, 512 * 9)
         
         modules = []
         for block in blocks:
@@ -78,11 +80,10 @@ class BackboneEncoderFirstStage(Module):
         lc_part_3 = torch.stack(lc_part_3)
         lc_part_2 = torch.stack(lc_part_2)
         
-        print(lc_part_4.shape)
         
-        lc_part_4 = self.output_seq_5(lc_part_4)
-        lc_part_3 = self.output_seq_4(lc_part_3)
-        lc_part_2 = self.output_seq_3(lc_part_2)
+        _, (lc_part_4, _) = self.output_seq_5(lc_part_4)
+        _, (lc_part_3, _) = self.output_seq_4(lc_part_3)
+        _, (lc_part_2, _) = self.output_seq_3(lc_part_2)
         
         print(lc_part_4.shape)
         raise Exception
