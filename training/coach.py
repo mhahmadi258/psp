@@ -137,6 +137,7 @@ class Coach:
 			with torch.no_grad():
 				x, y = x.to(self.device).float(), y.to(self.device).float()
 				y_hat, latent = self.net.forward(x, return_latents=True)
+				x = x[:,0,:,:,:]
 				loss, cur_loss_dict, id_logs = self.calc_loss(x, y, y_hat, latent)
 			agg_loss_dict.append(cur_loss_dict)
 
