@@ -21,7 +21,7 @@ class IDLoss(nn.Module):
 
     def forward(self, y_hat, y, x):
         n_samples = x.shape[0]
-        x_feats = self.extract_feats(x[:,1,:,:,:])
+        x_feats = self.extract_feats(x)
         y_feats = self.extract_feats(y)  # Otherwise use the feature from there
         y_hat_feats = self.extract_feats(y_hat)
         y_feats = y_feats.detach()

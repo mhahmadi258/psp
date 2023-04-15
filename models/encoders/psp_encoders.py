@@ -90,7 +90,6 @@ class BackboneEncoderFirstStage(Module):
         lc_part_2 = self.output_lin_3(lc_part_2.squeeze(0)).view(-1, 9, 512)
             
         x = torch.cat((lc_part_2, lc_part_3, lc_part_4), dim=1)
-        print(x.shape)
         return x
 
 class GradualStyleBlock(Module):
