@@ -36,7 +36,7 @@ class BackboneEncoderFirstStage(Module):
                                          Flatten())
         
         self.output_seq_4 = torch.nn.LSTM(128 * 7 * 7, 512)
-        self.output_lin_4 = Linear(512, 512 * 9)
+        self.output_lin_4 = Linear(512, 512 * 5)
         
         
         self.output_layer_5 = Sequential(BatchNorm2d(64),
@@ -44,7 +44,7 @@ class BackboneEncoderFirstStage(Module):
                                          Flatten())
         
         self.output_seq_5 = torch.nn.LSTM(64 * 7 * 7, 512)
-        self.output_lin_5 = Linear(512, 512 * 9)
+        self.output_lin_5 = Linear(512, 512 * 4)
         
         modules = []
         for block in blocks:
