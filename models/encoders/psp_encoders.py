@@ -58,6 +58,7 @@ class BackboneEncoderFirstStage(Module):
         lc_part_2 = self.output_layer_3(x).view(-1, 9, 512)
 
         x = torch.cat((lc_part_2, lc_part_3, lc_part_4), dim=1)
+        print(lc_part_2.shape)
         print(x.shape)
         raise Exception
         return x
