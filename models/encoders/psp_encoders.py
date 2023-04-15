@@ -45,6 +45,7 @@ class BackboneEncoderFirstStage(Module):
         self.modulelist = list(self.body)
 
     def forward(self, x):
+        x = x[:,1,:,:,:]
         x = self.input_layer(x)
         for l in self.modulelist[:3]:
           x = l(x)
