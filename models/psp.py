@@ -53,7 +53,7 @@ class pSp(nn.Module):
    
 	def freeze_encoder_body(self):
 		print('freezing encoder body ...')
-		for param in self.encoder.body.parameters:
+		for param in self.encoder.body.parameters():
 			param.requires_grad = False
 
 	def load_weights(self):
