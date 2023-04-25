@@ -32,6 +32,8 @@ class pSp(nn.Module):
 		self.face_pool = torch.nn.AdaptiveAvgPool2d((256, 256))
 		# Load weights if needed
 		self.load_weights()
+		self.freeze_decoder()
+		self.freeze_encoder_body()
 
 	def set_encoder(self):
 		if self.opts.encoder_type == 'GradualStyleEncoder':
@@ -43,6 +45,16 @@ class pSp(nn.Module):
 		else:
 			raise Exception('{} is not a valid encoders'.format(self.opts.encoder_type))
 		return encoder
+
+	def freeze_decoder(self):
+		print('freezing decoder ...')
+		for param in self.decoder.parameters():
+			param.requires_grad = False
+   
+	def freeze_encoder_body(self):
+		print('freezing encoder body ...')
+		for param in self.encoder.body.parameters():
+			param.requires_grad = False
 
 	def load_weights(self):
 		if self.opts.checkpoint_path is not None:
