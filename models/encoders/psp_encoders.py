@@ -11,9 +11,11 @@ from models.stylegan2.model import EqualLinear
 class BackboneEncoderFirstStage(Module):
     def __init__(self, num_layers, mode='ir', opts=None):
         super(BackboneEncoderFirstStage, self).__init__()
-        # print('Using BackboneEncoderFirstStage')
         assert num_layers in [50, 100, 152], 'num_layers should be 50,100, or 152'
         assert mode in ['ir', 'ir_se'], 'mode should be ir or ir_se'
+        self.style_count = opts.n_styles
+        self.coarse_ind = 9
+        self.middle_ind = 14
         blocks = get_blocks(num_layers)
         if mode == 'ir':
             unit_module = bottleneck_IR
@@ -26,15 +28,15 @@ class BackboneEncoderFirstStage(Module):
         self.output_layer_3 = Sequential(BatchNorm2d(256),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten(),
-                                         Linear(256 * 7 * 7, 512 * 9))
+                                         Linear(256 * 7 * 7, 512 * self.coarse_ind))
         self.output_layer_4 = Sequential(BatchNorm2d(128),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten(),
-                                         Linear(128 * 7 * 7, 512 * 5))
+                                         Linear(128 * 7 * 7, 512 * (self.middle_ind-self.coarse_ind)))
         self.output_layer_5 = Sequential(BatchNorm2d(64),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten(),
-                                         Linear(64 * 7 * 7, 512 * 4))
+                                         Linear(64 * 7 * 7, 512 * (self.style_count - self.coarse_ind - self.middle_ind)))
         modules = []
         for block in blocks:
             for bottleneck in block:
