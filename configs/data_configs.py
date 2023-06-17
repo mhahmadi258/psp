@@ -17,6 +17,13 @@ DATASETS = {
 		'test_source_root': dataset_paths['celeba_test'],
 		'test_target_root': dataset_paths['celeba_test'],
 	},
+	'ffhq_frontalize': {
+		'transforms': transforms_config.FrontalizationTransforms,
+		'train_source_root': dataset_paths['mh_dataset'],
+		'train_target_root': dataset_paths['mh_dataset'],
+		'test_source_root': dataset_paths['mh_dataset'],
+		'test_target_root': dataset_paths['mh_dataset'],
+	},
 	'celebs_sketch_to_face': {
 		'transforms': transforms_config.SketchToImageTransforms,
 		'train_source_root': dataset_paths['celeba_train_sketch'],

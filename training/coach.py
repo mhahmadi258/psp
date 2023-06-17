@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from utils import common, train_utils
 from criteria import id_loss, w_norm, moco_loss
 from configs import data_configs
-from datasets.images_dataset import ImagesDataset
+from datasets.images_dataset import ImagesDataset, MHImagesDataset
 from criteria.lpips.lpips import LPIPS
 from models.psp import pSp
 from training.ranger import Ranger
@@ -189,13 +189,13 @@ class Coach:
 		print(f'Loading dataset for {self.opts.dataset_type}')
 		dataset_args = data_configs.DATASETS[self.opts.dataset_type]
 		transforms_dict = dataset_args['transforms'](self.opts).get_transforms()
-		train_dataset = ImagesDataset(source_root=dataset_args['train_source_root'],
-									  target_root=dataset_args['train_target_root'],
+		train_dataset = MHImagesDataset(source_root=dataset_args['train_source_root'],
+									  train=True,
 									  source_transform=transforms_dict['transform_source'],
 									  target_transform=transforms_dict['transform_gt_train'],
 									  opts=self.opts)
-		test_dataset = ImagesDataset(source_root=dataset_args['test_source_root'],
-									 target_root=dataset_args['test_target_root'],
+		test_dataset = MHImagesDataset(source_root=dataset_args['test_source_root'],
+									 train = False,
 									 source_transform=transforms_dict['transform_source'],
 									 target_transform=transforms_dict['transform_test'],
 									 opts=self.opts)
