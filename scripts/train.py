@@ -6,8 +6,8 @@ import json
 import sys
 import pprint
 
-sys.path.append(".")
-sys.path.append("..")
+sys.path.insert(0,".")
+sys.path.insert(0,"..")
 
 from options.train_options import TrainOptions
 from training.coach import Coach
