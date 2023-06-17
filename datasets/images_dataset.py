@@ -55,7 +55,7 @@ class MHImagesDataset(Dataset):
 			try:
 				img = Image.open(path)
 				break
-			except UnidentifiedImageError:
+			except :
 				idx +=1
    
 		img = img.convert('RGB') if self.opts.label_nc == 0 else img.convert('L')
