@@ -63,8 +63,7 @@ class MHImagesDataset(Dataset):
 		from_im = img.crop((0,0,512,512))
 		to_im = img.crop((512,0,1024,512))
 
-		to_path = self.target_paths[index]
-		to_im = Image.open(to_path).convert('RGB')
+
 		if self.target_transform:
 			to_im = self.target_transform(to_im)
 
