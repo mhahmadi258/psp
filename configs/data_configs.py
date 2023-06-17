@@ -17,7 +17,7 @@ DATASETS = {
 		'test_source_root': dataset_paths['celeba_test'],
 		'test_target_root': dataset_paths['celeba_test'],
 	},
-	'ffhq_frontalize': {
+	'mh_frontalize': {
 		'transforms': transforms_config.FrontalizationTransforms,
 		'train_source_root': dataset_paths['mh_dataset'],
 		'train_target_root': dataset_paths['mh_dataset'],
