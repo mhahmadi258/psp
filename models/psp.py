@@ -53,14 +53,15 @@ class pSp(nn.Module):
    
 	def freeze_encoder_body(self):
 		print('freezing encoder body ...')
-		for param in self.encoder.body.parameters():
-			param.requires_grad = False
+		for name, param in self.encoder.body.named_parameters():
+			if not name.startswith('encoder.adapter'):
+				param.requires_grad = False
 
 	def load_weights(self):
 		if self.opts.checkpoint_path is not None:
 			print('Loading pSp from checkpoint: {}'.format(self.opts.checkpoint_path))
 			ckpt = torch.load(self.opts.checkpoint_path, map_location='cpu')
-			self.encoder.load_state_dict(get_keys(ckpt, 'encoder'), strict=True)
+			self.encoder.load_state_dict(get_keys(ckpt, 'encoder'), strict=False)
 			self.decoder.load_state_dict(get_keys(ckpt, 'decoder'), strict=True)
 			self.__load_latent_avg(ckpt)
 		else:

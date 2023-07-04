@@ -1,3 +1,4 @@
+from sys import modules
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -27,14 +28,25 @@ class BackboneEncoderFirstStage(Module):
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten(),
                                          Linear(256 * 7 * 7, 512 * 9))
+        
+        self.adapter_layer_3 = AdapterBlock(512,512,9)
+        
         self.output_layer_4 = Sequential(BatchNorm2d(128),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten(),
                                          Linear(128 * 7 * 7, 512 * 5))
+        
+        self.adapter_layer_4 = AdapterBlock(512,512,5)
+        
+        
         self.output_layer_5 = Sequential(BatchNorm2d(64),
                                          torch.nn.AdaptiveAvgPool2d((7, 7)),
                                          Flatten(),
                                          Linear(64 * 7 * 7, 512 * 4))
+        
+        self.adapter_layer_5 = AdapterBlock(512,512,4)
+        
+        
         modules = []
         for block in blocks:
             for bottleneck in block:
@@ -49,12 +61,15 @@ class BackboneEncoderFirstStage(Module):
         for l in self.modulelist[:3]:
           x = l(x)
         lc_part_4 = self.output_layer_5(x).view(-1, 4, 512)
+        lc_part_4 = self.adapter_layer_5(lc_part_4)
         for l in self.modulelist[3:7]:
           x = l(x)
         lc_part_3 = self.output_layer_4(x).view(-1, 5, 512)
+        lc_part_3 = self.adapter_layer_4(lc_part_3)
         for l in self.modulelist[7:21]:
           x = l(x)
         lc_part_2 = self.output_layer_3(x).view(-1, 9, 512)
+        lc_part_2 = self.adapter_layer_3(lc_part_2)
 
         x = torch.cat((lc_part_2, lc_part_3, lc_part_4), dim=1)
         return x
@@ -81,6 +96,23 @@ class GradualStyleBlock(Module):
         x = x.view(-1, self.out_c)
         x = self.linear(x)
         return x
+    
+    
+class AdapterBlock(Module):
+    def __init__(self, in_d, out_d, num_module):
+        super().__init__()
+        self.in_d = in_d
+        self.out_d = out_d
+        self.num_module = num_module
+        self.modules = [Linear(in_d, out_d) for _ in range(num_module)]
+        
+    def forward(self, x):
+        vectors = list()
+        for i in range(self.num_module):
+            vector = x[:,i,...]
+            vector = self.modules[i](vector)
+            vectors.append(vector)
+        return torch.stack(vectors,dim=1)
 
 
 class GradualStyleEncoder(Module):
