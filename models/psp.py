@@ -33,7 +33,7 @@ class pSp(nn.Module):
 		# Load weights if needed
 		self.load_weights()
 		self.freeze_decoder()
-		self.freeze_encoder_body()
+		self.freeze_encoder()
 
 	def set_encoder(self):
 		if self.opts.encoder_type == 'GradualStyleEncoder':
@@ -51,11 +51,16 @@ class pSp(nn.Module):
 		for param in self.decoder.parameters():
 			param.requires_grad = False
    
+	def freeze_encoder(self):
+		print('freezing encoder ...')
+		for name, param in self.encoder.named_parameters():
+			if not name.startswith('adapter_layer'):
+				param.requires_grad = False
+   
 	def freeze_encoder_body(self):
 		print('freezing encoder body ...')
-		for name, param in self.encoder.body.named_parameters():
-			if not name.startswith('encoder.adapter'):
-				param.requires_grad = False
+		for param in self.encoder.body.parameters():
+			param.requires_grad = False
 
 	def load_weights(self):
 		if self.opts.checkpoint_path is not None:
