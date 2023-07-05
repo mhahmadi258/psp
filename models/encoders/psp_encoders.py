@@ -105,6 +105,13 @@ class AdapterBlock(Module):
         self.out_d = out_d
         self.num_module = num_module
         self.adapters = nn.ModuleList([Linear(in_d, out_d, device='cuda:0') for _ in range(num_module)])
+        diagonal_mask = torch.eye(in_d, dtype=torch.bool)
+        for l in self.adapters:
+            diagonal_weight = torch.randn(out_d, in_d) * torch.sqrt(torch.tensor(1e-3)) + 1
+            off_diagonal_weight = torch.randn(out_d, in_d) * torch.sqrt(torch.tensor(1e-3))
+            weight = diagonal_mask * diagonal_weight + ~diagonal_mask * off_diagonal_weight
+            l.weight.data = weight
+            l.bias.data.fill_(0.0)
         
     def forward(self, x):
         vectors = list()
